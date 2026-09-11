@@ -31,14 +31,14 @@ bucket_name = "my-ai-files"
 [[d1_databases]]
 binding = "MY_AI_DB"
 database_name = "my-ai-db"
-database_id = "DAN_DATABASE_ID_VAO_DAY"
+database_id = "70fd971e-3152-43f1-bad4-4353e5762da5"
 
 # ---- Workers KV (cấu hình app + cache nhanh + trạng thái job video) ----
 # Bước 1: tạo namespace (chạy 1 lần):  wrangler kv namespace create MY_AI_KV
 # Bước 2: copy "id" mà lệnh trên in ra, dán vào dòng id bên dưới
 [[kv_namespaces]]
 binding = "MY_AI_KV"
-id = "DAN_KV_NAMESPACE_ID_VAO_DAY"
+id = "57e00036a30b45a2821cb29a18e80f76"
 
 # ---- Queues (xử lý video generate chạy nền, tránh timeout 30s của Worker) ----
 # Free plan: tin nhắn trong queue chỉ giữ tối đa 24h (không chỉnh được),
