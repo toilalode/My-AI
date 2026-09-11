@@ -1,0 +1,75 @@
+name = "my-ai-worker"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+[observability]
+enabled = true
+
+# ======================================================================
+# Free tier D1/KV/Queues/Vectorize/R2 (tra cứu 11/09/2026 tại
+# https://developers.cloudflare.com/workers/platform/pricing) — không cần
+# thẻ/billing để dùng ở mức nhỏ:
+#   R2:        10 GB lưu trữ / tháng
+#   D1:        5 GB, 5 triệu dòng đọc/ngày, 100.000 dòng ghi/ngày
+#   KV:        1 GB, 100.000 lượt đọc/ngày, 1.000 lượt ghi/ngày
+#   Queues:    10.000 operations/ngày (tin nhắn giữ tối đa 24h)
+#   Vectorize: 30 triệu "queried dimensions"/tháng, 5 triệu "stored dimensions"
+# App cá nhân dùng bình thường sẽ không chạm các giới hạn này.
+# ======================================================================
+
+# ---- R2 (lưu file bền vững: ảnh/video AI tạo ra + file người dùng upload) ----
+# Bước 1: tạo bucket (chạy 1 lần):  wrangler r2 bucket create my-ai-files
+# Bước 2: binding dưới đây cho phép Worker truy cập bucket qua env.MY_AI_BUCKET
+[[r2_buckets]]
+binding = "MY_AI_BUCKET"
+bucket_name = "my-ai-files"
+
+# ---- D1 (lưu lịch sử chat + hồ sơ người dùng) ----
+# Bước 1: tạo database (chạy 1 lần):  wrangler d1 create my-ai-db
+# Bước 2: copy "database_id" mà lệnh trên in ra, dán vào dòng database_id bên dưới
+# Bước 3: tạo bảng:  wrangler d1 execute my-ai-db --file=./schema.sql --remote
+[[d1_databases]]
+binding = "MY_AI_DB"
+database_name = "my-ai-db"
+database_id = "DAN_DATABASE_ID_VAO_DAY"
+
+# ---- Workers KV (cấu hình app + cache nhanh + trạng thái job video) ----
+# Bước 1: tạo namespace (chạy 1 lần):  wrangler kv namespace create MY_AI_KV
+# Bước 2: copy "id" mà lệnh trên in ra, dán vào dòng id bên dưới
+[[kv_namespaces]]
+binding = "MY_AI_KV"
+id = "DAN_KV_NAMESPACE_ID_VAO_DAY"
+
+# ---- Queues (xử lý video generate chạy nền, tránh timeout 30s của Worker) ----
+# Free plan: tin nhắn trong queue chỉ giữ tối đa 24h (không chỉnh được),
+# đủ dùng vì video xử lý xong trong vài phút là lấy kết quả luôn.
+# Bước 1: tạo queue (chạy 1 lần):
+#   wrangler queues create my-ai-video-queue
+#   wrangler queues create my-ai-video-queue-dlq   (queue chứa job lỗi, không bắt buộc nhưng nên có)
+[[queues.producers]]
+binding = "VIDEO_QUEUE"
+queue = "my-ai-video-queue"
+
+[[queues.consumers]]
+queue = "my-ai-video-queue"
+max_batch_size = 1
+max_retries = 2
+dead_letter_queue = "my-ai-video-queue-dlq"
+
+# ---- Vectorize (tìm kiếm ngữ nghĩa trong lịch sử chat) ----
+# Bước 1: tạo index (chạy 1 lần) — 768 chiều khớp với model embedding text-embedding-004 của Gemini:
+#   wrangler vectorize create my-ai-chat-index --dimensions=768 --metric=cosine
+[[vectorize]]
+binding = "MY_AI_VECTORIZE"
+index_name = "my-ai-chat-index"
+
+# ---- Analytics Engine (theo dõi số request / model / lỗi theo thời gian) ----
+# Không cần lệnh tạo trước — chỉ cần khai báo binding, Cloudflare tự tạo dataset
+# khi Worker ghi data point đầu tiên. Xem số liệu tại dashboard Cloudflare
+# (Workers & Pages -> Analytics Engine) hoặc query bằng SQL API.
+[[analytics_engine_datasets]]
+binding = "MY_AI_ANALYTICS"
+dataset = "my_ai_metrics"
+
+# GEMINI_API_KEY KHÔNG đặt ở đây (file này có thể bị commit lên git).
+# Đặt bằng lệnh:  wrangler secret put GEMINI_API_KEY
