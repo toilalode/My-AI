@@ -2,7 +2,7 @@ name: Deploy Pages
 on:
   push:
     branches: [main]
-    paths: [frontend/index.html]
+    paths: [frontend/**]
 permissions:
   contents: read
   pages: write
