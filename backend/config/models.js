@@ -17,7 +17,7 @@
 //    Google Cloud thì mới gọi được, nếu không sẽ báo lỗi 400/403.
 const MODELS = {
   chatLite:    'gemini-3.1-flash-lite',        // free — nhanh nhất, câu hỏi ngắn/đơn giản
-  chatFast:    'gemini-3.8-flash',             // free — mặc định cho chat thường (thay cho gemini-3-flash-preview cũ)
+  chatFast:    'gemini-3.6-flash',             // free — mặc định cho chat thường (thay cho gemini-3-flash-preview cũ)
   chatCoding:  'gemini-3.5-flash',             // free — mạnh cho code / agentic
   chatSmart:   'gemini-3.8-flash',             // free — ĐỔI từ gemini-3.1-pro-preview (không free) sang Flash mới nhất
   imageGen:    'gemini-3.1-flash-image',       // ⚠️ KHÔNG free — Nano Banana 2, cần bật billing
