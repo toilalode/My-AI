@@ -1,0 +1,18 @@
+# Secrets - TUYỆT ĐỐI không commit
+.env
+.dev.vars
+
+# Dependencies
+node_modules/
+
+# File AI tạo ra lưu cục bộ (bản Node) - không cần lên git, đã có R2/thư viện lo
+backend/uploads/*
+!backend/uploads/**/.gitkeep
+
+# Cloudflare Workers local state
+worker/.wrangler/
+.wrangler/
+
+# OS / editor
+.DS_Store
+*.log
