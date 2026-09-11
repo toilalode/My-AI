@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>My-AI</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="brand">✨ My-AI</div>
+    <button id="newChatBtn" title="Cuộc trò chuyện mới">＋ Trò chuyện mới</button>
+    <button class="nav-btn active" data-mode="chat">💬 Chat</button>
+    <button class="nav-btn" data-mode="homework">📘 Giải bài tập</button>
+    <button class="nav-btn" data-mode="image">🖼️ Tạo ảnh</button>
+    <button class="nav-btn" data-mode="video">🎬 Tạo video</button>
+    <button class="nav-btn" data-mode="canvas">🧩 Canvas</button>
+    <button class="nav-btn" data-mode="code">💻 Code Editor</button>
+    <button class="nav-btn" data-mode="voice">🎙️ Voice</button>
+    <button class="nav-btn" data-mode="agent">🚀 Agent Mode</button>
+    <button class="nav-btn" data-mode="research">🔎 Deep Research</button>
+    <button class="nav-btn" data-mode="library">🗂️ Thư viện</button>
+
+    <div class="sidebar-history">
+      <div class="sidebar-history-title">🕘 Lịch sử chat</div>
+      <input type="text" id="convSearchInput" class="conv-search-input" placeholder="🔍 Tìm hội thoại..." />
+      <div id="convList" class="conv-list"></div>
+    </div>
+
+    <div class="sidebar-spacer"></div>
+    <button class="nav-btn" data-mode="settings">⚙️ Cài đặt / Connectors</button>
+  </nav>
+
+  <!-- MAIN -->
+  <main id="main">
+
+    <!-- TOP BAR -->
+    <header id="topbar">
+      <button id="hamburger">☰</button>
+      <div class="topbar-title" id="modeTitle">Chat</div>
+
+      <div class="topbar-controls">
+        <select id="modelSelect" title="Chọn model">
+          <option value="auto">⚡ Auto</option>
+          <option value="gemini-3.1-flash-lite">3.1 Flash-Lite (nhanh)</option>
+          <option value="gemini-3-flash-preview">3 Flash</option>
+          <option value="gemini-3.5-flash">3.5 Flash (coding)</option>
+          <option value="gemini-3.1-pro-preview">3.1 Pro (thông minh nhất)</option>
+        </select>
+
+        <label class="toggle-pill" title="Bật/tắt suy luận (thinking)">
+          <input type="checkbox" id="thinkingToggle" />
+          <span>🧠 Thinking</span>
+        </label>
+
+        <label class="toggle-pill" title="Cho phép AI tìm kiếm trên web">
+          <input type="checkbox" id="webSearchToggle" />
+          <span>🌐 Web Search</span>
+        </label>
+
+        <label class="toggle-pill" title="Trò chuyện tạm thời - không lưu lịch sử">
+          <input type="checkbox" id="tempChatToggle" />
+          <span>🕶️ Tạm thời</span>
+        </label>
+      </div>
+    </header>
+
+    <div id="tempBanner" class="hidden">🕶️ Chế độ trò chuyện tạm thời — nội dung sẽ KHÔNG được lưu lại.</div>
+
+    <!-- ================= CHAT / HOMEWORK PANEL ================= -->
+    <section class="panel active" id="panel-chat">
+      <div class="chat-search-bar">
+        <input type="text" id="semSearchInput" placeholder="🔎 Tìm kiếm ngữ nghĩa trong lịch sử chat..." />
+        <button id="semSearchBtn">Tìm</button>
+        <button id="semSearchCloseBtn" class="hidden">✕</button>
+      </div>
+      <div id="semSearchResults" class="hidden"></div>
+      <div class="messages" id="chatMessages"></div>
+      <div class="attach-preview" id="attachPreview"></div>
+      <div class="composer">
+        <div class="composer-tools">
+          <button class="tool-btn" id="btnFile" title="Đính kèm file">📎</button>
+          <button class="tool-btn" id="btnMedia" title="Đính kèm ảnh/video">🖼️</button>
+          <button class="tool-btn" id="btnFolder" title="Đính kèm cả thư mục (nhiều file)">📁</button>
+          <button class="tool-btn" id="btnCamera" title="Chụp ảnh bằng camera">📷</button>
+          <button class="tool-btn" id="btnRecordVideo" title="Quay video">🎥</button>
+          <button class="tool-btn" id="btnMic" title="Ghi âm giọng nói để hỏi">🎤</button>
+        </div>
+        <textarea id="chatInput" placeholder="Nhắn gì đó cho My-AI..." rows="1"></textarea>
+        <button id="sendBtn">➤</button>
+      </div>
+      <input type="file" id="fileInput" class="hidden" />
+      <input type="file" id="mediaInput" accept="image/*,video/*" class="hidden" />
+      <input type="file" id="folderInput" class="hidden" webkitdirectory directory multiple />
+      <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" />
+      <input type="file" id="videoCaptureInput" accept="video/*" capture="environment" class="hidden" />
+    </section>
+
+    <!-- ================= IMAGE PANEL ================= -->
+    <section class="panel" id="panel-image">
+      <div class="tool-form">
+        <textarea id="imgPrompt" placeholder="Mô tả bức ảnh bạn muốn tạo..." rows="3"></textarea>
+        <div class="row">
+          <label class="toggle-pill"><input type="checkbox" id="imgProToggle" /><span>Chất lượng cao (Pro)</span></label>
+          <button id="imgGenBtn">🎨 Tạo ảnh</button>
+        </div>
+      </div>
+      <div id="imgResults" class="grid-results"></div>
+    </section>
+
+    <!-- ================= VIDEO PANEL ================= -->
+    <section class="panel" id="panel-video">
+      <div class="tool-form">
+        <textarea id="vidPrompt" placeholder="Mô tả video ngắn bạn muốn tạo..." rows="3"></textarea>
+        <div class="row">
+          <label>Thời lượng (giây):
+            <input type="number" id="vidDuration" value="5" min="2" max="10" style="width:60px" />
+          </label>
+          <button id="vidGenBtn">🎬 Tạo video (nền, không sợ timeout)</button>
+        </div>
+        <p class="hint">⚠️ Tạo video thường cần tài khoản Google AI có billing/quyền truy cập. Tài khoản free có thể báo lỗi — đó là giới hạn từ phía Google chứ không phải lỗi app.</p>
+        <p class="hint">Video chạy nền qua Queue — bạn có thể chuyển sang panel khác trong lúc chờ, quay lại đây vẫn thấy tiến trình.</p>
+      </div>
+      <div id="vidJobs"></div>
+      <div id="vidResults" class="grid-results"></div>
+    </section>
+
+    <!-- ================= CANVAS PANEL ================= -->
+    <section class="panel" id="panel-canvas">
+      <div class="canvas-layout">
+        <div class="canvas-left">
+          <textarea id="canvasPrompt" placeholder="Yêu cầu AI tạo 1 trang HTML/CSS/JS độc lập (vd: 'tạo máy tính đơn giản')..." rows="3"></textarea>
+          <button id="canvasGenBtn">⚡ Tạo Canvas</button>
+          <textarea id="canvasCode" placeholder="<!-- code HTML sẽ hiện ở đây, bạn cũng có thể tự sửa -->" spellcheck="false"></textarea>
+          <button id="canvasRunBtn">▶ Chạy lại preview</button>
+        </div>
+        <div class="canvas-right">
+          <iframe id="canvasFrame" sandbox="allow-scripts allow-modals"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CODE EDITOR PANEL ================= -->
+    <section class="panel" id="panel-code">
+      <div class="code-layout">
+        <textarea id="codeEditor" placeholder="// Viết hoặc dán code vào đây..." spellcheck="false"></textarea>
+        <div class="code-side">
+          <textarea id="codeInstruction" placeholder="Yêu cầu AI viết/sửa code này thế nào?" rows="4"></textarea>
+          <button id="codeAskBtn">🤖 Nhờ AI viết/sửa</button>
+          <button id="codeCopyBtn">📋 Copy</button>
+          <button id="codeDownloadBtn">⬇ Tải xuống</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VOICE PANEL ================= -->
+    <section class="panel" id="panel-voice">
+      <div class="voice-center">
+        <button id="voiceBigBtn">🎤</button>
+        <p id="voiceStatus">Nhấn để nói chuyện bằng giọng nói (theo lượt)</p>
+        <div id="voiceTranscript"></div>
+        <audio id="voiceAudioPlayer" controls class="hidden"></audio>
+      </div>
+    </section>
+
+    <!-- ================= AGENT MODE PANEL ================= -->
+    <section class="panel" id="panel-agent">
+      <p class="hint">🚀 Agent Mode — lấy cảm hứng từ Antigravity/Gemini Spark của Google, nhưng chạy trên API công khai: AI sẽ tự lên kế hoạch, tự tìm kiếm web nhiều bước rồi tổng hợp kết quả cho bạn.</p>
+      <textarea id="agentTask" placeholder="Giao nhiệm vụ cho Agent (vd: 'Tìm và so sánh 3 laptop lập trình dưới 20 triệu')..." rows="3"></textarea>
+      <button id="agentRunBtn">🚀 Chạy Agent</button>
+      <div id="agentLog"></div>
+    </section>
+
+    <!-- ================= DEEP RESEARCH PANEL ================= -->
+    <section class="panel" id="panel-research">
+      <textarea id="researchQuery" placeholder="Chủ đề bạn muốn nghiên cứu sâu..." rows="3"></textarea>
+      <button id="researchBtn">🔎 Bắt đầu nghiên cứu</button>
+      <hr/>
+      <details>
+        <summary>🌍 Hoặc: mở 1 trang web cụ thể và hỏi AI về nó</summary>
+        <input type="text" id="browseUrl" placeholder="https://..." />
+        <input type="text" id="browseQuestion" placeholder="Bạn muốn hỏi gì về trang này?" />
+        <button id="browseBtn">Mở & Hỏi</button>
+      </details>
+      <div id="researchLog"></div>
+    </section>
+
+    <!-- ================= LIBRARY (THƯ VIỆN) PANEL ================= -->
+    <section class="panel" id="panel-library">
+      <div class="tool-form">
+        <div class="row">
+          <select id="libFolderFilter">
+            <option value="">Tất cả</option>
+            <option value="images">🖼️ Ảnh</option>
+            <option value="videos">🎬 Video</option>
+            <option value="audio">🔊 Âm thanh</option>
+            <option value="uploads">📎 File upload</option>
+          </select>
+          <button id="libRefreshBtn">🔄 Tải lại</button>
+        </div>
+        <p class="hint">File ảnh/video/âm thanh AI tạo ra được tự động lưu ở đây, xem lại bất cứ lúc nào — kể cả sau khi tải lại trang.</p>
+      </div>
+      <div id="libResults" class="grid-results"></div>
+      <button id="libLoadMoreBtn" style="display:none">Tải thêm</button>
+    </section>
+
+    <!-- ================= SETTINGS PANEL ================= -->
+    <section class="panel" id="panel-settings">
+      <h2>Cài đặt</h2>
+      <p>API key được cấu hình ở file <code>.env</code> phía backend (không nhập ở giao diện để tránh lộ key).</p>
+      <h3>Connectors (sắp có)</h3>
+      <ul class="connector-list">
+        <li>📧 Gmail <span class="badge">sắp có</span></li>
+        <li>🗂️ Google Drive <span class="badge">sắp có</span></li>
+        <li>📝 Notion <span class="badge">sắp có</span></li>
+        <li>💬 Slack <span class="badge">sắp có</span></li>
+      </ul>
+      <p class="hint">Đây là các nút placeholder — khi bạn muốn, mình sẽ nối thật qua MCP hoặc API riêng của từng dịch vụ.</p>
+    </section>
+
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
