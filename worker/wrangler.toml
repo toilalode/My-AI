@@ -17,13 +17,6 @@ enabled = true
 # App cá nhân dùng bình thường sẽ không chạm các giới hạn này.
 # =====================================================================
 
-# ---- R2 (lưu file bền vững: ảnh/video AI tạo ra + file người dùng upload) ----
-# Bước 1: tạo bucket (chạy 1 lần):  wrangler r2 bucket create my-ai-files
-# Bước 2: binding dưới đây cho phép Worker truy cập bucket qua env.MY_AI_BUCKET
-[[r2_buckets]]
-binding = "MY_AI_BUCKET"
-bucket_name = "my-ai-files"
-
 # ---- D1 (lưu lịch sử chat + hồ sơ người dùng) ----
 # Bước 1: tạo database (chạy 1 lần):  wrangler d1 create my-ai-db
 # Bước 2: copy "database_id" mà lệnh trên in ra, dán vào dòng database_id bên dưới
