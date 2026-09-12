@@ -77,4 +77,4 @@ class_name = "GeminiProxyDO"
 
 [[migrations]]
 tag = "v1"
-new_classes = ["GeminiProxyDO"]
+new_sqlite_classes = ["GeminiProxyDO"]
