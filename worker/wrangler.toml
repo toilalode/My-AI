@@ -15,7 +15,7 @@ enabled = true
 #   Queues:    10.000 operations/ngày (tin nhắn giữ tối đa 24h)
 #   Vectorize: 30 triệu "queried dimensions"/tháng, 5 triệu "stored dimensions"
 # App cá nhân dùng bình thường sẽ không chạm các giới hạn này.
-# ======================================================================
+# =====================================================================
 
 # ---- R2 (lưu file bền vững: ảnh/video AI tạo ra + file người dùng upload) ----
 # Bước 1: tạo bucket (chạy 1 lần):  wrangler r2 bucket create my-ai-files
