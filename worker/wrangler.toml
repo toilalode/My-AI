@@ -5,7 +5,7 @@ compatibility_date = "2026-01-01"
 [observability]
 enabled = true
 
-# =====================================================================
+# ====================================================================
 # Free tier D1/KV/Queues/Vectorize/R2 (tra cứu 11/09/2026 tại
 # https://developers.cloudflare.com/workers/platform/pricing) — không cần
 # thẻ/billing để dùng ở mức nhỏ:
