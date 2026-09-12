@@ -3,7 +3,7 @@
 // để trống là được (dùng đường dẫn tương đối).
 // Nếu deploy frontend lên GitHub Pages và backend là Cloudflare Worker,
 // XOÁ dòng "const API_BASE = '';" bên dưới và dùng dòng đã điền URL thật:
-const API_BASE = '';
+const API_BASE = 'https://my-ai-worker.vudanhquy1002.workers.dev';
 // const API_BASE = 'https://my-ai-worker.YOUR-SUBDOMAIN.workers.dev';
 
 // ===================== STATE =====================
