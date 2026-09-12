@@ -66,3 +66,15 @@ dataset = "my_ai_metrics"
 
 # GEMINI_API_KEY không đặt ở đây (file này có thể bị commit lên git).
 # Đặt bằng lệnh:  wrangler secret put GEMINI_API_KEY
+
+# ---- Durable Object: ghim vùng cố định khi gọi Gemini API ----
+# Không cần lệnh tạo trước, không cần thẻ (Durable Objects miễn phí từ 2025).
+# Giúp né lỗi "User location is not supported for the API use" do Worker
+# thường bị định tuyến ngẫu nhiên qua vùng Google chưa hỗ trợ Gemini.
+[[durable_objects.bindings]]
+name = "GEMINI_PROXY"
+class_name = "GeminiProxyDO"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["GeminiProxyDO"]
