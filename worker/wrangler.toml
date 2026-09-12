@@ -71,5 +71,5 @@ index_name = "my-ai-chat-index"
 binding = "MY_AI_ANALYTICS"
 dataset = "my_ai_metrics"
 
-# GEMINI_API_KEY KHÔNG đặt ở đây (file này có thể bị commit lên git).
+# GEMINI_API_KEY không đặt ở đây (file này có thể bị commit lên git).
 # Đặt bằng lệnh:  wrangler secret put GEMINI_API_KEY
