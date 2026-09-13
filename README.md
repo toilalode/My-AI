@@ -3,7 +3,7 @@
 ## Cài đặt
 
 ```bash
-cd My-AI
+cd Velocitix-AI
 npm install
 cp .env.example .env
 ```
