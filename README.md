@@ -1,5 +1,5 @@
 # Velocitix-AI
-
+- Mở web tại : toilalode.github.io/Velocitix-AI/
 ## Cài đặt
 
 ```bash
