@@ -1,6 +1,4 @@
-# My-AI
-
-Trợ lý AI cá nhân tự host, chạy bằng Gemini API (dùng được với API key **free**).
+# Velocitix-AI
 
 ## Cài đặt
 
@@ -22,12 +20,12 @@ Chạy:
 npm start
 ```
 
-Mở trình duyệt: `http://localhost:3000`
+Mở trình duyệt: `http://localhost:8080`
 
 ## Cấu trúc
 
 ```
-My-AI/
+Velocitix-AI/
 ├── backend/
 │   ├── server.js         # Express server, gộp toàn bộ route
 │   ├── config/models.js  # Tên model Gemini + logic Auto model
