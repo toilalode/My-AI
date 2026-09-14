@@ -67,6 +67,12 @@ dataset = "my_ai_metrics"
 # GEMINI_API_KEY không đặt ở đây (file này có thể bị commit lên git).
 # Đặt bằng lệnh:  wrangler secret put GEMINI_API_KEY
 
+# ---- Đăng nhập Google ----
+# GOOGLE_CLIENT_ID không phải bí mật (nó lộ công khai trong code frontend), nên để thẳng ở đây.
+# Lấy tại: https://console.cloud.google.com/apis/credentials
+[vars]
+GOOGLE_CLIENT_ID = "752017566752-sujjhluldnk408m7cd09g4g4vdfuonte.apps.googleusercontent.com"
+
 # ---- Durable Object: ghim vùng cố định khi gọi Gemini API ----
 # Không cần lệnh tạo trước, không cần thẻ (Durable Objects miễn phí từ 2025).
 # Giúp né lỗi "User location is not supported for the API use" do Worker
