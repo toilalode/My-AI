@@ -326,25 +326,6 @@ export default {
     try {
       if (url.pathname === '/health') return json({ ok: true, hasApiKey: !!env.GEMINI_API_KEY }, cors);
 
-      // ---------- ROUTE TẠM: tạo Vectorize metadata index cho field "userId" ----------
-      // Chỉ cần mở URL này 1 LẦN trên trình duyệt sau khi deploy, để Vectorize cho phép filter
-      // theo userId khi tìm kiếm ngữ nghĩa (bắt buộc phải khai báo field trước khi dùng filter).
-      // Yêu cầu 2 secret: CF_ACCOUNT_ID và CF_API_TOKEN (token cần quyền "Vectorize: Edit").
-      // Sau khi chạy thành công 1 lần, có thể xoá cả route này lẫn 2 secret nếu muốn.
-      if (url.pathname === '/api/admin/setup-vectorize-index') {
-        if (!env.CF_ACCOUNT_ID || !env.CF_API_TOKEN) {
-          return json({ error: 'Thiếu secret CF_ACCOUNT_ID hoặc CF_API_TOKEN. Chạy: wrangler secret put CF_ACCOUNT_ID và wrangler secret put CF_API_TOKEN' }, cors, 500);
-        }
-        const apiUrl = `https://api.cloudflare.com/client/v4/accounts/${env.CF_ACCOUNT_ID}/vectorize/v2/indexes/my-ai-chat-index/metadata_index/create`;
-        const r = await fetch(apiUrl, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${env.CF_API_TOKEN}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ propertyName: 'userId', indexType: 'string' }),
-        });
-        const data = await r.json();
-        return json({ status: r.status, cloudflareResponse: data }, cors, r.ok ? 200 : 500);
-      }
-
       // ---------- Đăng nhập bằng Google ----------
       // POST /api/auth/google { credential } -> xác minh ID token Google, upsert user vào D1,
       // trả về { token, user } — "token" là session token riêng của app, FE lưu lại và gửi kèm
